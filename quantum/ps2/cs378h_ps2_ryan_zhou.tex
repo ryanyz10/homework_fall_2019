@@ -1,0 +1,142 @@
+\documentclass[11pt]{article}
+\usepackage{geometry}                
+\geometry{letterpaper}
+\usepackage[]{graphicx}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{braket}
+\usepackage{fancyhdr}
+\usepackage{qcircuit}
+
+\begin{document}
+
+\providecommand{\setnr}{Homework 2}
+\providecommand{\due}{Due Thursday, September 19\textsuperscript{th} at 11:59 PM}
+\providecommand{\name}{Ryan Zhou (rz3974)}
+\newif\ifsols
+
+% swap these to turn solutions on or off
+\solstrue
+%\solsfalse
+
+%%%%%%%%%%%%%% formatting stuff
+\lhead{CS378H, MA375T, PHY341, ES377}
+\rhead{\setnr\ \ifsols Answer Key \fi}
+\lfoot{\due} \cfoot{} \rfoot{Page \thepage}
+\renewcommand{\footrulewidth}{0.4pt}
+\pagestyle{fancy}
+
+\newcounter{Questions} \newcounter{Parts}
+
+\newcommand{\namequestion}[1]{
+\stepcounter{Questions} \setcounter{Parts}{0} 
+\vspace{6mm} \noindent {\Large \textbf{#1} \hspace{1mm}}}
+
+\newcommand{\namepart}[1]{
+\stepcounter{Parts}
+\vspace{2mm} \noindent {\textbf{#1}}}
+
+\newcommand{\question}{\namequestion{\arabic{Questions}.}}
+\renewcommand{\part}{\namepart{\alph{Parts}) }}
+
+\newcommand{\sol}[1]{\ifsols \begin{em}  Solution. #1 \end{em} \fi}
+
+\newcommand{\pare}[1]{\left(#1 \right)}
+\newcommand{\separrow}{ \hspace{0.5cm}\rightarrow\hspace{0.5cm} }
+\newcommand{\sepsemi}{; \hspace{0.5cm}}
+
+%%%%%%%%%%%%%% Document starts here
+\begin{center}
+    {\Large \setnr\ \ifsols Solutions \fi}
+\vspace{2mm}
+{\large \\ Introduction to Quantum Information Science}
+{\large \\ \ifsols \name \else \due \fi}
+\end{center}
+
+\question \textbf{More fun with matrices.}
+
+\part The $2\times2$ unitary matrix is straightforward:
+\[\left(\begin{array}
+    [c]{cc}%
+    0 & -1\\
+    1 & 0
+\end{array}\right).\]
+
+\part A $4\times4$ unitary matrix satisfying the constraints is below:
+\[\left(\begin{array}
+    [c]{cccc}%
+    0 & \frac{1}{\sqrt{3}} & \frac{1}{\sqrt{3}} & \frac{1}{\sqrt{3}}\\
+    \frac{1}{\sqrt{3}} & 0 & \frac{1}{\sqrt{3}} & -\frac{1}{\sqrt{3}}\\
+    -\frac{1}{\sqrt{3}} & \frac{1}{\sqrt{3}} & 0 & -\frac{1}{\sqrt{3}}\\
+    \frac{1}{\sqrt{3}} & \frac{1}{\sqrt{3}} & -\frac{1}{\sqrt{3}} & 0
+\end{array}\right).\]
+
+\part Let $A=
+\left(\begin{array}
+    [c]{ccc}%
+    0 & c & e\\
+    a & 0 & f\\
+    b & d & 0
+\end{array}\right)
+$ be a $3\times3$ unitary matrix with only diagonal $0$ Since $A$ is unitary, $A^HA=I$. We then have the equations
+\begin{align*}
+    |a|^2 + |b|^2 = 1 &\qquad \overline{a}f=a\overline{f}=0 \\
+    |c|^2 + |d|^2 = 1 &\qquad \overline{b}d=b\overline{d}=0 \\
+    |e|^2 + |f|^2 = 1 &\qquad \overline{c}e=c\overline{e}=0.
+\end{align*}
+Then one of each pair $(a,f), (b,d), (c,e)$ must be $0$. This implies that there exist non-diagonal entries in $A$ that are $0$, a contradiction.
+Thus, no such matrix $A$ can exist.
+
+\question \textbf{Single Qubit Quantum Circuits.} 
+
+\part $SHZH\ket{0}=SHZ\ket{+}=SH\ket{-}=S\ket{1}=i\ket{1}=\ket{1}$. If we measure in the ${\ket{0},\ket{1}}$ basis, $P[\ket{0}]=0$, $P[\ket{1}]=1$.
+
+\part $HYZR_{\pi/4}\ket{0}=HYZ\ket{+}=HY\ket{-}=H(iXZ\ket{-})=H(iX\ket{+})=H(i\ket{+})=H\ket{+}=\ket{0}.$ If we measure in the ${\ket{+},\ket{-}}$ basis,
+$P[\ket{+}]=\frac{1}{2}$, $P[\ket{-}]=\frac{1}{2}$.
+
+\part $HT\ket{+}=H(\frac{1}{\sqrt{2}}\ket{0}+\frac{1}{\sqrt{2}}e^{i\pi/4}\ket{1})=\frac{1}{\sqrt{2}}\ket{+}+\frac{1}{\sqrt{2}}e^{i\pi/4}\ket{-}$.
+
+\part $TZT\ket{+}=TZ(\frac{1}{\sqrt{2}}\ket{0}+\frac{1}{\sqrt{2}}e^{i\pi/4}\ket{1})=T(\frac{1}{\sqrt{2}}\ket{0}-\frac{1}{\sqrt{2}}e^{i\pi/4}\ket{1})=\frac{1}{\sqrt{2}}\ket{0}-\frac{1}{\sqrt{2}}e^{i\pi/2}\ket{1}.$
+
+\clearpage
+
+\question \textbf{Miscellaneous.}
+
+\part Intuitively, $\ket{0}+\ket{+}$ is the superposition of the $\ket{0}$ and $\ket{+}$ states. Let $\ket{\phi}=\ket{0}+\ket{1}$. Note that $\braket{\phi|\phi}=2+\sqrt{2}$. Then $\ket{\psi}=\frac{1}{\sqrt{2+\sqrt{2}}}\ket{\phi}$.
+
+\part $H\ket{\psi}=\frac{1}{\sqrt{2+\sqrt{2}}}H(\ket{0}+\ket{+})=\frac{1}{\sqrt{2+\sqrt{2}}}(\ket{+}+\ket{0})=\ket{\psi}$. Then $\ket{\psi}$ is an eigenstate of the $H$ gate with $\lambda=1$.
+
+\part There are $8$ different states reachable from $\ket{0}$ with $H$ and $S$:
+\begin{align*}
+    \ket{0} & \qquad H\ket{0}=\ket{+}\\
+    SH\ket{0}=\ket{i} & \qquad HSH\ket{0}=H\ket{i}=\frac{\ket{+}+i\ket{-}}{\sqrt{2}}\\
+    S^2H\ket{0}=\ket{-} & \qquad HS^2H\ket{0}=H\ket{-}=\ket{1}\\
+    s^3H\ket{0}=\ket{-i} & \qquad HS^3H\ket{0}=H\ket{-i}=\frac{\ket{+}-i\ket{-}}{\sqrt{2}}.
+\end{align*}
+
+\question \textbf{Distinguishability of states.} 
+
+\part Consider the quantum circuit: 
+\[
+\Qcircuit @C=1em @R=.7em {
+    \lstick{\ket{\psi}} & \gate{R_{\pi/8}} & \meter
+} 
+\]
+If $\ket{\psi}=\ket{0}$, $R_{\pi/8}\ket{\psi}=\cos{(\frac{\pi}{8})}\ket{0}+\sin{(\frac{\pi}{8})}\ket{1}$, so probability of failure is $\sin^2{(\pi/8)}$. If $\ket{\psi}=\ket{+}$, $R_{\pi/8}\ket{\psi}=\cos{(\frac{3\pi}{8})}\ket{0}+\sin{(\frac{3\pi}{8})}\ket{1}$, so probability of failure is $\cos^2{(3\pi/8)}=\sin^2{(\pi/8)}$. Then overall probability of failure is $\sin^2(\frac{\pi}{8})$.\\
+\textbf{Extra Credit:} Suppose that we rotate by some angle $\epsilon\in[0,\frac{\pi}{4}]$. If $\ket{\psi}=\ket{0}$, $R_\epsilon\ket{\psi}=\cos{\epsilon}\ket{0}+\sin{\epsilon}\ket{1}$, and if $\ket{\psi}=\ket{+},R_\epsilon\ket{\psi}=\cos{(\frac{\pi}{4}+\epsilon)}\ket{0}+\sin{(\frac{\pi}{4}+\epsilon)}\ket{1}$. Then the overall probability of failure $p_f=\sin^2{(\epsilon)}+\cos^2{(\frac{\pi}{4}+\epsilon)}$. The first derivative of this is
+$p_f'=2\sin(\epsilon)\cos(\epsilon)-2\sin(\frac{\pi}{4}+\epsilon)\cos(\frac{\pi}{4}+\epsilon)=0$. Rearranging and converting the $\sin$ to $\cos$, $\cos(\frac{\pi}{2}-\epsilon)\cos(\epsilon)=\cos(\frac{\pi}{4}-\epsilon)\cos(\frac{\pi}{4}+\epsilon).$ Then either 
+\begin{align*}
+    \frac{\pi}{2}-\epsilon=\frac{\pi}{4}-\epsilon,\quad\epsilon=\frac{\pi}{4}+\epsilon,
+\end{align*}
+or
+\begin{align*}
+    \frac{\pi}{2}-\epsilon=\frac{\pi}{4}+\epsilon,\quad\epsilon=\frac{\pi}{4}-\epsilon.
+\end{align*}
+The first case is impossible, but in the second case we find that optimally $\epsilon=\frac{\pi}{8}$.
+
+\part The probability of failure is equal to the probability of getting $\ket{0}$ and measuring $1$ plus the probability of getting $\ket{+}$ and measuring $0$. 
+Then $P[\text{failure}]=\frac{1}{2}0+\frac{1}{2}\frac{1}{2}=\frac{1}{4}$.
+
+
+\end{document}
+
