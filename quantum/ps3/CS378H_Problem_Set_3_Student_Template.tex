@@ -1,0 +1,124 @@
+\documentclass[11pt]{article}
+\usepackage{geometry}                
+\geometry{letterpaper}
+\usepackage[]{graphicx}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{braket}
+\usepackage{fancyhdr}
+\usepackage{qcircuit}
+
+\begin{document}
+
+\providecommand{\setnr}{Problem Set \#3}
+\providecommand{\due}{Due Thursday, September 26\textsuperscript{th} at 11:59 PM}
+\newif\ifsols
+
+% swap these to turn solutions on or off
+%\solstrue
+\solsfalse
+
+%%%%%%%%%%%%%% formatting stuff
+\lhead{CS378H, MA375T, PHY341}
+\rhead{\setnr\ \ifsols Answer Key \fi}
+\lfoot{\due} \cfoot{} \rfoot{Page \thepage}
+\renewcommand{\footrulewidth}{0.4pt}
+\pagestyle{fancy}
+
+\newcounter{Questions} \newcounter{Parts}
+
+\newcommand{\namequestion}[1]{
+\stepcounter{Questions} \setcounter{Parts}{0} 
+\vspace{6mm} \noindent {\Large \textbf{#1} \hspace{1mm}}}
+
+\newcommand{\namepart}[1]{
+\stepcounter{Parts}
+\vspace{2mm} \noindent {\textbf{#1}}}
+
+\newcommand{\question}{\namequestion{\arabic{Questions}.}}
+\renewcommand{\part}{\namepart{\alph{Parts}) }}
+
+\newcommand{\sol}[1]{\ifsols \begin{em}  Solution. #1 \end{em} \fi}
+
+\newcommand{\pare}[1]{\left(#1 \right)}
+\newcommand{\separrow}{ \hspace{0.5cm}\rightarrow\hspace{0.5cm} }
+\newcommand{\sepsemi}{; \hspace{0.5cm}}
+
+%%%%%%%%%%%%%% Document starts here
+\begin{center}
+    {\Large \setnr\ \ifsols Answer Key \fi}
+\vspace{2mm}
+{\large \\ Introduction to Quantum Information Science}
+{\large \\ \due}
+\end{center}
+
+\question \textbf{Local Evolution of Entangled States.} Suppose Alice and Bob share the two qubit entangled state $\ket{\psi} = \frac{1}{\sqrt{2}} (\ket{00}+\ket{11}) $. Suppose that Alice applies a one qubit unitary transformation $U$ to her qubit, show that this has exactly the same effect as if Bob had applied the unitary transformation $U^\top$ (not the conjugate-transpose of U, just the transpose) to his qubit.
+
+\question \textbf{Multi-qubit quantum circuits}
+
+\part Prove the following identity.
+
+
+\[
+\Qcircuit @C=.5em @R=0.0em @!R {
+    & \gate{H} & \ctrl{2} & \gate{H} & \qw &  &  & \targ & \qw\\
+    & & & & & \push{\rule{.3em}{0em}=\rule{.3em}{0em}}\\
+    & \gate{H} & \targ    & \gate{H} & \qw &  & & \ctrl{-2} & \qw \\
+}
+\]
+
+\noindent In other words: show that a CNOT by which qubit A controls qubit B, when viewed in a different basis, is actually a CNOT by which qubit B controls qubit A! This illustrates how, with quantum information, unlike with classical information, there's no way for one system to affect another one without the possibility of being affected itself.
+
+\vspace{1em}
+\part Consider the following circuit. Write $\ket{\psi} = \alpha\ket{0} + \beta\ket{1}$.
+
+\[
+\Qcircuit @C=.5em @R=0.5em @!R {
+    \lstick{\ket{0}} & \gate{H} & \gate{T} & \targ  & \qw  &\meter \\
+    \lstick{\ket{\psi_\text{in}}} & \qw & \gate{X} & \ctrl{-1} & \gate{S} & \qw & \qw & \rstick{\ket{\psi_\text{out}}} \\
+}
+\]
+
+Where: $H = \frac{1}{\sqrt{2}} \begin{pmatrix} 1 & 1 \\ 1 & -1 \end{pmatrix}$, $X=\begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}$, $T= \begin{pmatrix} 1 & 0 \\ 0 & e^{i\pi/4} \end{pmatrix}$, $S= \begin{pmatrix} 1 & 0 \\ 0 & i \end{pmatrix}$
+
+\noindent What is the state of the first qubit before the CNOT? \\
+What is the state of the two qubits before the measurement?\\
+What are the probabilities of measuring $\ket{0}$ or $\ket{1}$?\\
+What is the second qubit state $\ket{\psi_\text{out}}$ when the first qubit is measured as $\ket{0}$. How about when it's measured as $\ket{1}$?
+
+\part The 2-qubit CSIGN gate (also known as a controlled-Z gate) operates by  applying a relative phase shift of -1 to the $\ket{1}$ component of the second qubit if the first qubit is equal to 1 and otherwise does nothing. As a matrix it is given explicitly by the diagonal matrix diag(1,1,1,-1). Show how to simulate a CSIGN gate using only CNOT and Hadamard gates by writing down the appropriate circuit.
+
+\question \textbf{Quantum Money Attacks.} Suppose you're a quantum money counterfeiter, trying to forge a banknote in Wiesner's scheme.  You're given a qubit that's $\ket{0}$ ,$\ket{1}$, $\ket{+}$ or $\ket{-}$, each with equal probability 1/4.  You can apply any quantum circuit you like to the qubit to produce a two-qubit state. Then, both of your output qubits will separately be given back to the bank for verification.  (I.e., if the original qubit was $\ket{0}$ or $\ket{1}$ then the bank will measure both output qubits in the $ \{\ket{0},\ket{1}\} $ basis and accept if and only if both outcomes match the original qubit, and likewise if the original qubit was $\ket{+}$ or $\ket{-}$ the bank will measure and check in the $\{ \ket{+},\ket{-} \}$ basis.)  Your goal is to maximize the probability that the bank accepts.
+
+In class, we saw a procedure that breaks this scheme with probability $\frac{5}{8}$. Now consider the following procedure. Among 3 qubits, initialize the first two qubits to $\ket{0}$ and let the third qubit be the qubit from the original banknote to be counterfeited. Then apply a 3 qubit unitary transformation whose effect is the following mapping:
+
+\begin{align*}
+\ket{000} & \mapsto \frac{\sqrt{3}}{2} \ket{000} + \frac{\ket{110} + \ket{101} + \ket{011}}{\sqrt{12}} \\
+\ket{001} & \mapsto \frac{\sqrt{3}}{2} \ket{111} + \frac{\ket{001} + \ket{010} + \ket{100}}{\sqrt{12}} \\
+\end{align*}
+
+Finally, measure the first qubit in the $\{\ket{0},\ket{1}\}$ basis and output the state given by the second two qubits.
+
+Show that the probability of success for this procedure is strictly greater than $\frac{5}{8}$. \textit{Hint: break it up into cases depending on whether the outcome of the measurement is $\ket{0}$ or $\ket{1}$.}
+
+\textit{Note: This procedure actually turns out to be the optimal one.}
+
+\question \textbf{SARG04 Quantum Key Distribution}
+
+In class we discussed the BB84 QKD scheme. There is a similar protocol, called SARG04, which we study in this problem.
+
+\part Alice randomly samples two bitstrings $a = 011001$ and $b = 101011$. She prepares a six qubit state $\ket{\psi}$ that encodes the string $a$ in a basis given by $b$. For the $i$'th qubit, if $b_i = 0$ then she uses the $\ket{0},\ket{1}$ basis and if $b_i = 1$ then she uses $\ket{+},\ket{-}$. Write down $\ket{\psi}$.
+
+\part Alice sends $\ket{\psi}$ to Bob on a public quantum channel. Eve could intercept it, but say for now she leaves $\ket{\psi}$ untouched. Bob samples a bitstring $b' = 100111$, and measures $\ket{\psi}$ in the basis specified by $b'$. What is a state that could Bob measure? What bitstring $a'$ does it correspond to?
+
+\part In BB84 Alice now publicly announces $b$ and Bob publicly announces where it differs from $b'$. They then discard the parts of $a$ and $a'$ where $b$ and $b'$ differ. What are they left with in each case?
+
+\part In SARG04 Alice for each qubit in $\ket{\psi}$ sends a classical description of one of the pairs $\{\ket{0}, \ket{+}\}$, $\{\ket{0}, \ket{-}\}$, $\{\ket{1}, \ket{+}\}$ or $\{\ket{1}, \ket{-}\}$, so that her qubit in $\ket{\psi}$ is part of that pair. What is a string of pairs she could send?
+
+\part Bob now analyses each pair, and sees if the $a'$ he measured can be used to determine the correct basis. For your $a'$, for which pairs is the basis unambiguous, and what basis is it? \textit{Hint: if Alice sends $\{\ket{0}, \ket{+}\}$, what is the only way for Bob to measure $\ket{1}$?}
+
+\part When the basis was not ambiguous, Bob announces the positions where $b'$ had the correct basis. Alice and Bob keep the respective parts of $b$ and $b'$. What are they left with? 
+
+
+\end{document}
+
