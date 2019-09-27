@@ -1,0 +1,127 @@
+\documentclass[11pt]{article}
+\usepackage{geometry}                
+\geometry{letterpaper}
+\usepackage[]{graphicx}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{braket}
+\usepackage{fancyhdr}
+\usepackage{qcircuit}
+
+\begin{document}
+
+\providecommand{\setnr}{Problem Set \#3}
+\providecommand{\due}{Due Thursday, September 26\textsuperscript{th} at 11:59 PM}
+\providecommand{\name}{Ryan Zhou (rz3974)}
+\newif\ifsols
+
+% swap these to turn solutions on or off
+\solstrue
+%\solsfalse
+
+%%%%%%%%%%%%%% formatting stuff
+\lhead{CS378H, MA375T, PHY341}
+\rhead{\setnr\ \ifsols Solutions \fi}
+\lfoot{\due} \cfoot{} \rfoot{Page \thepage}
+\renewcommand{\footrulewidth}{0.4pt}
+\pagestyle{fancy}
+
+\newcounter{Questions} \newcounter{Parts}
+
+\newcommand{\namequestion}[1]{
+\stepcounter{Questions} \setcounter{Parts}{0} 
+\vspace{6mm} \noindent {\Large \textbf{#1} \hspace{1mm}}}
+
+\newcommand{\namepart}[1]{
+\stepcounter{Parts}
+\vspace{2mm} \noindent {\textbf{#1}}}
+
+\newcommand{\question}{\namequestion{\arabic{Questions}.}}
+\renewcommand{\part}{\namepart{\alph{Parts}) }}
+
+\newcommand{\sol}[1]{\ifsols \begin{em}  Solution. #1 \end{em} \fi}
+
+\newcommand{\pare}[1]{\left(#1 \right)}
+\newcommand{\separrow}{ \hspace{0.5cm}\rightarrow\hspace{0.5cm} }
+\newcommand{\sepsemi}{; \hspace{0.5cm}}
+
+%%%%%%%%%%%%%% Document starts here
+\begin{center}
+    {\Large \setnr\ \ifsols Solutions \fi}
+\vspace{2mm}
+{\large \\ Introduction to Quantum Information Science}
+{\large \\ \ifsols \name \else \due \fi}
+\end{center}
+
+\question \textbf{Local Evolution of Entangled States.} 
+
+Let $U=\left(\begin{array}[c]{cc}a & b\\c & d\\\end{array}\right)$ and $U^T=\left(\begin{array}[c]{cc}a & c\\b & d\\\end{array}\right).$ Then
+\begin{align*}
+    (U\otimes I)\ket{\psi}&=\frac{1}{\sqrt{2}}\left[\left(\begin{array}[c]{c}a\\c\end{array}\right)\otimes\left(\begin{array}[c]{c}1\\0\end{array}\right)
+    +\left(\begin{array}[c]{c}b\\d\end{array}\right)\otimes\left(\begin{array}[c]{c}0\\1\end{array}\right)\right]\\
+                          &=\frac{1}{\sqrt{2}}\left[\left(\begin{array}[c]{c}a\\0\\c\\0\end{array}\right)+\left(\begin{array}[c]{c}0\\b\\0\\d\end{array}\right)\right]\\
+                          &=\frac{1}{\sqrt{2}}\left(\begin{array}[c]{c}a\\b\\c\\d\end{array}\right)=
+                          \frac{1}{\sqrt{2}}\left[\left(\begin{array}[c]{c}a\\b\\0\\0\end{array}\right)+\left(\begin{array}[c]{c}0\\0\\c\\d\end{array}\right)\right]\\
+                          &=\frac{1}{\sqrt{2}}\left[\left(\begin{array}[c]{c}1\\0\end{array}\right)\otimes\left(\begin{array}[c]{c}a\\b\end{array}\right)
+    +\left(\begin{array}[c]{c}0\\1\end{array}\right)\otimes\left(\begin{array}[c]{c}c\\d\end{array}\right)\right]\\
+    &=(I\otimes U^T)\ket{\psi}.
+\end{align*}
+
+\question \textbf{Multi-qubit quantum circuits}
+
+\part Writing the circuit in terms of matrix multiplication, we have
+\begin{align*}
+(H\otimes H)\text{cX}(H\otimes H)&=\frac{1}{4}\left(\begin{array}[c]{cccc}1&1&1&1\\1&-1&1&-1\\1&1&-1&-1\\1&-1&-1&1\end{array}\right)
+    \left(\begin{array}[c]{cccc}1&0&0&0\\0&1&0&0\\0&0&0&1\\0&0&1&0\end{array}\right)
+    \left(\begin{array}[c]{cccc}1&1&1&1\\1&-1&1&-1\\1&1&-1&-1\\1&-1&-1&1\end{array}\right)\\
+    &=\frac{1}{4}\left(\begin{array}[c]{cccc}1&1&1&1\\1&-1&1&-1\\1&1&-1&-1\\1&-1&-1&1\end{array}\right)
+    \left(\begin{array}[c]{cccc}1&1&1&1\\1&-1&1&-1\\1&-1&-1&1\\1&1&-1&-1\end{array}\right)\\
+    &=\frac{1}{4}\left(\begin{array}[c]{cccc}4&0&0&0\\0&0&0&4\\0&0&4&0\\0&4&0&0\end{array}\right)\\
+    &=\left(\begin{array}[c]{cccc}1&0&0&0\\0&0&0&1\\0&0&1&0\\0&1&0&0\end{array}\right).
+\end{align*}
+Note that this final array is a reverse cX gate with the $2$nd q-bit is used as the control.
+
+\vspace{1em}
+\part Let $\ket{\psi}=\alpha\ket{0}+\beta\ket{1}$. The answers to the questions are below:
+\begin{enumerate}
+    \item What is the state of the first qubit before the CNOT? $\frac{1}{\sqrt{2}}\left(\begin{array}[c]{c}1\\e^{i\pi/4}\end{array}\right).$
+    \item What is the state of the two qubits before the measurement? $\frac{1}{\sqrt{2}}\left(\begin{array}[c]{c}\beta\\\alpha e^{i\pi/4}i\\\beta e^{i\pi/4}\\\alpha i\end{array}\right).$
+    \item What are the probabilities of measuring $\ket{0}$ or $\ket{1}$? $P[\ket{0}]=\frac{1}{2}(\beta^2+\alpha^2)=\frac{1}{2},P[\ket{1}]=\frac{1}{2}(\alpha^2+\beta^2)=\frac{1}{2}$.
+    \item What is the second qubit state $\ket{\psi_\text{out}}$ when the first qubit is measured as $\ket{0}$. How about when it's measured as $\ket{1}$? If the first qubit is $\ket{0}$, $\ket{\psi_\text{out}}=\beta\ket{0}+\alpha e^{i\pi/4}i\ket{1}$. If the first qubit is $\ket{1}$, $\ket{\psi_\text{out}}=\beta e^{i\pi/4}\ket{0}+\alpha i\ket{1}$.
+\end{enumerate}
+
+\part The circuit is below:
+\[
+\Qcircuit @C=.5em @R=0.0em @!R {
+&  & \ctrl{2} &  \qw&  &  &  & \ctrl{2} & \qw\\
+& & & & & \push{\rule{.3em}{0em}=\rule{.3em}{0em}}\\   
+&  \gate{H}& \targ & \gate{H} & \qw &  & & \gate{Z} & \qw \\}
+\]
+
+\question \textbf{Quantum Money Attacks.} If we expand all the tensor products, we get the giant vector
+\[
+    \left(\begin{array}[c]{c}
+        \frac{\sqrt{3}}{2}\\0\\0\\\frac{1}{\sqrt{12}}\\0\\\frac{1}{\sqrt{12}}\\\frac{1}{\sqrt{12}}\\0
+    \end{array}\right).
+\]
+
+Then the probability of success for any given qubit state is $P(\text{success})=(\frac{5}{6})(\frac{9}{10})+(\frac{1}{6})(0)=\frac{3}{4}$. Note that each case
+is symmetric, thus the overall probability is $4(\frac{1}{4})(\frac{3}{4})=\frac{3}{4}>\frac{5}{8}$.
+
+\question \textbf{SARG04 Quantum Key Distribution}
+
+\part $a=011001$, $b=101011$, $\ket{\psi}=\ket{+}\ket{1}\ket{-}\ket{0}\ket{+}\ket{-}$.
+
+\part $b'=100111$, $\ket{\psi'}=\ket{+}\ket{1}\ket{0}\ket{-}\ket{+}\ket{-}$, $a'=010101$.
+
+\part Alice and Bob will discard indices $2$ and $3$, so $a=a'=0101$.
+
+\part Assign $\{\ket{0}, \ket{+}\}=00$, $\{\ket{0}, \ket{-}\}=01$, $\{\ket{1}, \ket{+}\}=10$ or $\{\ket{1}, \ket{-}\}=11$. Then we can encode $\ket{psi}$
+with the classical string $101111001001$.
+
+\part Using $a'$ from part b, we get a $b'=1?1111$.
+
+\part Alice and Bob will discard indices $1$ and $2$, so $a=0001$ and $a'=0101$. I'm not sure if $a,a'$ are supposed to match in this scheme. It seems like they should, but I didn't really understand the instructions we were given for SARG04.
+
+\end{document}
+
