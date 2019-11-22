@@ -1,0 +1,132 @@
+\documentclass[11pt]{article}
+\usepackage{geometry}                
+\geometry{letterpaper}
+\usepackage[]{graphicx}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{braket}
+\usepackage{fancyhdr}
+\usepackage{qcircuit}
+
+\begin{document}
+
+\providecommand{\setnr}{Homework 4}
+\providecommand{\due}{Due Thursday, October 3 at 11:59 PM}
+\newif\ifsols
+
+% swap these to turn solutions on or off
+%\solstrue
+\solsfalse
+
+%%%%%%%%%%%%%% formatting stuff
+\lhead{CS378, MA375T, PHY341, ES377}
+\rhead{\setnr\ \ifsols Answer Key \fi}
+\lfoot{\due} \cfoot{} \rfoot{Page \thepage}
+\renewcommand{\footrulewidth}{0.4pt}
+\pagestyle{fancy}
+
+\newcounter{Questions} \newcounter{Parts}
+
+\newcommand{\namequestion}[1]{
+\stepcounter{Questions} \setcounter{Parts}{0} 
+\vspace{6mm} \noindent {\Large \textbf{#1} \hspace{1mm}}}
+
+\newcommand{\namepart}[1]{
+\stepcounter{Parts}
+\vspace{2mm} \noindent {\textbf{#1}}}
+
+\newcommand{\question}{\namequestion{\arabic{Questions}.}}
+\renewcommand{\part}{\namepart{\alph{Parts}) }}
+
+\newcommand{\sol}[1]{\ifsols \begin{em}  Solution. #1 \end{em} \fi}
+
+\newcommand{\pare}[1]{\left(#1 \right)}
+\newcommand{\abs}[1]{\left|#1 \right|}
+\newcommand{\separrow}{ \hspace{0.5cm}\rightarrow\hspace{0.5cm} }
+\newcommand{\sepsemi}{; \hspace{0.5cm}}
+
+%%%%%%%%%%%%%% Document starts here
+\begin{center}
+    {\Large \setnr\ \ifsols Answer Key \fi}
+\vspace{2mm}
+{\large \\ Introduction to Quantum Information Science}
+{\large \\ \due}
+\end{center}
+
+\question We said in class that dense quantum coding requires 1 ebit of
+entanglement between Alice and Bob, in addition to 1 qubit of
+communication.  In this problem, however, we'll see how to do a ``poor
+man's" dense quantum coding with no entanglement, just 1 qubit of
+communication from Alice to Bob.
+
+Suppose Alice knows two bits, $x$ and $y$.  She'd like to send a single
+qubit to Bob, which will let Bob learn either bit of his choice, $x$ or
+$y$, though not necessarily both of them (and she doesn't know which Bob
+is interested in).
+
+\part Describe a protocol that lets Bob learn the bit of his choice with
+$\cos^2(\pi/8) \approx 85\%$ success probability.
+\textit{Hint: You might find the following states useful:}
+$$\cos(\pi/8)\ket{0}+\sin(\pi/8)\ket{1}\sepsemi \sin(\pi/8)\ket{0}+\cos(\pi/8)\ket{1}$$$$\cos(\pi/8)\ket{0}-\sin(\pi/8)\ket{1}\sepsemi \sin(\pi/8)\ket{0}-\cos(\pi/8)\ket{1}$$
+
+\part Now suppose Alice is limited to classical communication only.  And
+suppose also that the bits x and y are uniformly random and
+independent of each other.  Describe a protocol that lets Bob learn
+the bit of his choice with 75\% success probability (regardless of which bit he choses to learn).
+
+\clearpage
+\question A ``qutrit" has the form $a\ket{0}+b\ket{1}+c\ket{2}$, where $|a|^2+|b|^2+|c|^2=1$.
+Suppose Alice and Bob share the entangled state $(\ket{00}+\ket{11}+\ket{22})/\sqrt{3}$.  Then consider the following protocol for teleporting a qutrit $\ket{\psi}=a\ket{0}+b\ket{1}+c\ket{2}$ from Alice to Bob: first
+Alice applies a CSUM gate from $\ket{\psi}$ onto her half of the entangled pair, where
+$$\text{CSUM} (\ket{x} \otimes \ket{y}) = \ket{x} \otimes \ket{y + x\text{ }(\text{mod } 3)}.$$
+\noindent Next, Alice applies the unitary matrix $F$ to the $\ket{\psi}$ register, where
+$$ F =\frac{1}{\sqrt{3}} \begin{bmatrix} 1&1&1 \\ 1& \omega & \omega^2 \\ 1 & \omega^2 & \omega \end{bmatrix},$$
+\noindent and $\omega = e^{2i\pi/3}$ so that $\omega^3 = 1$. She then measures both of her qutrits in the
+$\{\ket{0},\ket{1},\ket{2}\}$ basis, and sends the results to Bob over a classical channel. Show that Bob can recover a local copy of $\ket{\psi}$ given these measurement results. 
+
+This quantum circuit summarizes the protocol:
+
+\[
+\Qcircuit @C=.5em @R=0.5em @!R {
+	& \lstick{\ket{\psi}} & \multigate{1}{\text{CSUM}} & \gate{F} & \meter \cwx[2] \\
+	& \multigate{1}{\frac{\ket{00}+\ket{11}+\ket{22}}{\sqrt{3}}} &  \ghost{\text{CSUM}} & \meter \cwx[1] \\
+	& \ghost{\frac{\ket{00}+\ket{11}+\ket{22}}{\sqrt{3}}} & \qw & \gate{?}  & \gate{?} & \qw & \rstick{\ket{\psi_\text{out}}} \\
+}
+\]
+
+Here the double-lines represent classical `trits' being sent from Alice to Bob. Depending on the value of the first trit he receives, 0,1 or 2, Bob can apply one of three corrective gates(Where ``?'' is a placeholder for the three gates which you will have to determine). Depending on the value of the second trit he receives he can apply a particular corrective gate either 0, 1 or 2 times (Where ``?'' is a placeholder for this gate, possibly different than any used for the first trit, which you will determine). Prove that $\ket{\psi} = \ket{\psi_\text{out}}$ for appropriately chosen $?$ gates for all possible measurement results. \textit{Hint: You \emph{could} explicitly work out all 9 possible cases, but you
+	could also save time by noticing a general pattern that lets you
+	handle all the cases in a unified way.}
+
+\question Suppose Alice and Bob hold one qubit each of an arbitrary two-qubit state $\ket{\psi}$ that is possibly entangled. They can apply local operations and are allowed classical communication. Their goal is to apply the CNOT gate to their state $\ket{\psi}$. Describe a protocol they can use to achieve this using two ebits of entanglement. 
+
+\question In the ``GHZ game," there are three players, Alice, Bob, and
+Charlie, who are given bits $x$, $y$, and $z$ respectively.  We're promised
+that $x+y+z=0 \hspace{.5em} \text{(mod 2)}$; otherwise the bits could be arbitrary.  The
+players' goal is, without communicating with each other, to output
+bits $a$, $b$, $c$ respectively such that
+$a+b+c \text{(mod 2)} = \text{OR}(x,y,z)$.
+In other words, the parity of their output bits should be odd, if and
+only if at least one of the input bits is nonzero.
+
+\part Show that, in a classical universe, there is no strategy that
+causes the players to succeed with certainty, for all four possible
+allowed inputs $(x,y,z)$.
+
+\part Now suppose that the players share the state:
+
+$$\frac{\ket{000} - \ket{011} - \ket{101} - \ket{110}}{2}$$  
+
+Suppose that each player measures their
+qubit in the $\{\ket{0}, \ket{1}\}$ basis if their input bit is 0, or in the
+$\{\ket{+}, \ket{-}\}$ basis if their input bit is 1, and that they output
+according to what they see.  Show that this lets the players win the
+GHZ game with certainty, for all four possible input triples.
+
+\part \textbf{Extra credit}. Design a protocol that works for the GHZ state:
+
+$$\frac{\ket{000} + \ket{111}}{\sqrt{2}}$$  
+
+
+\end{document}
+
